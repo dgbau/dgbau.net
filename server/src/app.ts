@@ -12,6 +12,8 @@ import { logger } from './components/logger';
 import * as phases from './phases';
 import * as middleware from './middleware';
 
+import * as routes from './routes';
+
 export const app = bootable(express(), logger);
 
 app.phase(phases.processEvents, 'process-events');
@@ -36,6 +38,12 @@ appConfig.rateLimit && app.use(rateLimit({ windowMs: 500, max: 10 }));
 app.use(middleware.morgan());
 app.use(middleware.user());
 app.use(middleware.error());
+
+app.use('/', routes.rootRouter);
+app.use('/projects', routes.projectsRouter);
+app.use('/blog', routes.blogRouter);
+app.use('/images', routes.imagesRouter);
+app.use('/recipes', routes.recipesRouter);
 
 app.get('/', (req, res) => {
   res.send('welcome');
